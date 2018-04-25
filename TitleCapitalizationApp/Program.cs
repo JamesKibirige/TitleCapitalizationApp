@@ -4,12 +4,16 @@ using System.Text;
 
 namespace TitleCapitalizationApp
 {
-    class Program
+    public class Program
     {
+        public static string LowerCaseWord(string word)
+        {
+            return word.ToLower();
+        }
         public static string CapitalizeWord(string word)
         {
             //1. Make all letters in word Lower Case
-            StringBuilder sb = new StringBuilder(word.ToLower());
+            StringBuilder sb = new StringBuilder(LowerCaseWord(word));
 
             //2. Capitalize first letter in word
             char firstLetter = Char.ToUpper(sb[0]);
@@ -20,20 +24,24 @@ namespace TitleCapitalizationApp
 
         public static string CapitalizeTitle(string title)
         {
-            //0. First step make all characters lowercase in title parameter
-            title = title.ToLower();
+            //0.    Variable that will hold resulting capitalized Title
+            string capitalizedTitle;
 
-            //1. Split string into an array of Strings using a space ' ' as a seperator to delimit the strings
+            //1.    Check for special cases where entered title is NULL, White space or Empty String
+            if (String.IsNullOrWhiteSpace(title))
+            {
+                capitalizedTitle = title;
+                return capitalizedTitle;
+            }
+     
+            //1. First step make all characters lowercase in title parameter
+            title = LowerCaseWord(title);
+
+            //2. Split string into an array of Strings using a space ' ' as a seperator to delimit the strings
             char[] seperator = new char[] {' '};
             var titleWords = title.Split(seperator);
 
-            //2. Get First and Last words in Title and Capitalize them
-            string firstWord = CapitalizeWord(titleWords[0]);
-            titleWords[0] = firstWord;
-            string lastWord = CapitalizeWord(titleWords[titleWords.Length - 1]);
-            titleWords[titleWords.Length - 1] = lastWord;
-
-            //3. Process strings from mid-section of title applying Capitalization rules
+            //3. Populate a List of lowerCaseWords that define the set of words that should be lowercased in a Title
             List<string> lowerCaseWords = new List<string>()
             {
                "a",
@@ -46,37 +54,21 @@ namespace TitleCapitalizationApp
                "but",
                "or"
             };
-            lowerCaseWords.Sort();
 
-            //4.
-            for (int i = 1; i < titleWords.Length - 1; i++)
+            lowerCaseWords.Sort();//Sort list into alphabetical order to optimise any item searches that may be performed in future
+
+            //4.    Loop over collection of words in the array titleWords capitalizing the correct words according to the Capitalization rules
+            for (int i = 0; i < titleWords.Length; i++)
             {
-                var x = titleWords[i];
-                if (lowerCaseWords.Contains(x))
+                //a.    Capitalize words if they are the first word in the tile (i==0)
+                if (i == 0 || i == titleWords.Length || (!lowerCaseWords.Contains(titleWords[i])))
                 {
-                    x = titleWords[i].ToLower();
-                    titleWords[i] = x;
-                }
-                else
-                {
-                    x = CapitalizeWord(titleWords[i]);
-                    titleWords[i] = x;
+                    titleWords[i] = CapitalizeWord(titleWords[i]);
                 }
             }
 
             //5.
-            string capitalizedTitle = String.Empty;
-            foreach (var word in titleWords)
-            {
-                if (capitalizedTitle == String.Empty)
-                {
-                    capitalizedTitle = capitalizedTitle + word;
-                }
-                else
-                {
-                    capitalizedTitle = capitalizedTitle + " " + word;
-                }
-            }
+            capitalizedTitle = String.Join(' ',titleWords);
 
             return capitalizedTitle;
         }
@@ -89,8 +81,16 @@ namespace TitleCapitalizationApp
             //Example 2: "wHy DoeS A biRd Fly?"
             string secondExample = CapitalizeTitle("wHy Does A bIrd Fly?");
 
+            //Example 3: " "
+            string thirdExample = CapitalizeTitle(" ");
+
+            //Example 4: ""
+            string fourthExample = CapitalizeTitle("");
+
             Console.WriteLine("Example 1 -'i love solving problems and it is fun': " + firstExample);
             Console.WriteLine("Example 2 -'wHy DoeS A biRd Fly?': " + secondExample);
+            Console.WriteLine("Example 3 -' ': " + thirdExample);
+            Console.WriteLine("Example 4 -'': " + fourthExample);
         }
     }
 }
