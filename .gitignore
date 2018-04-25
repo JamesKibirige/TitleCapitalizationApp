@@ -3,3 +3,7 @@
 ################################################################################
 
 /.vs/TitleCapitalizationApp/v15
+/TitleCapitalizationApp/bin/Debug/netcoreapp2.0
+/TitleCapitalizationApp/obj
+/TitleCapitalizationTests/bin/Debug/netcoreapp2.0
+/TitleCapitalizationTests/obj
